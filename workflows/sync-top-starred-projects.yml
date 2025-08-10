@@ -1,4 +1,4 @@
-name: Update Featured Projects in README
+name: Sync Top Starred Projects
 
 on:
   schedule:
@@ -20,10 +20,10 @@ jobs:
           python-version: "3.x"
       - name: Install requests
         run: pip install requests
-      - name: Download latest update_featured_projects.py
-        run: curl -fsSL -o update_featured_projects.py https://raw.githubusercontent.com/LoveDoLove/Github-Profile-Manager/refs/heads/main/scripts/update_featured_projects.py
+      - name: Download latest sync_top_starred_projects.py
+        run: curl -fsSL -o sync_top_starred_projects.py https://raw.githubusercontent.com/LoveDoLove/Github-Profile-Manager/refs/heads/main/scripts/sync_top_starred_projects.py
       - name: Update featured projects in README
-        run: python -u update_featured_projects.py
+        run: python -u sync_top_starred_projects.py
       - name: Commit and push if changed
         run: |
           git config --global user.name 'github-actions[bot]'

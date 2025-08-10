@@ -17,7 +17,7 @@
 <h3 align="center">GitHub Profile Manager</h3>
 
   <p align="center">
-    Automate and enhance your GitHub profile with dynamic featured projects, 3D contribution graphs, and CI/CD workflow templates.
+    Automate your GitHub profile README with dynamic featured projects and a 3D contribution graph using GitHub Actions workflows.
     <br />
     <a href="https://github.com/LoveDoLove/Github-Profile-Manager"><strong>Explore the docs »</strong></a>
     <br />
@@ -42,7 +42,6 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
@@ -56,7 +55,7 @@
 
 ## About The Project
 
-**GitHub Profile Manager** automates the management of your GitHub profile README by dynamically updating featured repositories based on stars, displaying a 3D contribution graph, and providing ready-to-use CI/CD workflow templates. This project streamlines the process of keeping your profile engaging and up-to-date.
+**GitHub Profile Manager** automates your GitHub profile README by dynamically updating featured repositories (top-starred), displaying a 3D contribution graph, and providing ready-to-use GitHub Actions workflow templates. No manual script execution is required—just set up the workflows and let automation keep your profile engaging and up-to-date.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -70,41 +69,38 @@
 
 ## Getting Started
 
-To use the GitHub Profile Manager workflows:
-
 ### Installation
 
-1. Copy the desired workflow YAML file from the `workflows/` directory into your repository's `.github/workflows` directory.
+1. Copy the workflow YAML files from the `workflows/` directory into your repository’s `.github/workflows` directory:
 
-2. (Optional) To exclude specific repositories from being processed, set the `EXCLUDE_REPOS` environment variable in your workflow configuration. Use a comma (`,`) to separate multiple repository names.
+   - [`workflows/generate-3d-contribution-graph.yml`](workflows/generate-3d-contribution-graph.yml)
+   - [`workflows/sync-top-starred-projects.yml`](workflows/sync-top-starred-projects.yml)
 
-   Example:
-
-   ```yaml
-   env:
-     EXCLUDE_REPOS: repo1,repo2,repo3
-   ```
+2. No manual script execution is needed. The workflows will run automatically on the configured schedule or trigger.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Usage
 
-- **Update Featured Projects:**  
-  Run the update script to refresh the featured repositories in your profile README:
+- **Automatic Featured Projects:**  
+  The `sync-top-starred-projects.yml` workflow automatically updates your profile README with your top-starred public repositories.  
+  To exclude specific repositories, set the `EXCLUDE_REPOS` environment variable in your workflow YAML:
+  ```yaml
+  env:
+    EXCLUDE_REPOS: repo1,repo2,repo3
+  ```
+- **3D Contribution Graph:**  
+  The `generate-3d-contribution-graph.yml` workflow generates a 3D SVG contribution graph.  
+  Embed it in your README with:
 
-  ```sh
-  python scripts/update_featured_projects.py
+  ```markdown
+  ![3D GitHub Profile](https://raw.githubusercontent.com/<your-username>/<your-username>/main/profile-3d-contrib/profile-green-animate.svg)
   ```
 
-  This script fetches your public repositories, sorts them by stars, and updates the README accordingly.
+  Replace `<your-username>` with your GitHub username.
 
-- **3D Contribution Graph:**  
-  The profile README can embed a 3D contribution graph using SVG from your main GitHub profile.
-
-- **CI/CD Workflows:**  
-  Use the templates in the `workflows/` directory to automate tasks like updating featured projects or generating contribution graphs.
-
-_For more examples, refer to the [Documentation](https://github.com/LoveDoLove/Github-Profile-Manager)_
+- **No Manual Scripts:**  
+  All updates are handled by GitHub Actions. No need to run scripts like `scripts/sync_top_starred_projects.py` manually.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -131,7 +127,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
