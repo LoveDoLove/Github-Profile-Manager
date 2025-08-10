@@ -25,7 +25,7 @@ jobs:
       - name: Update featured projects in README
         run: python -u sync_top_starred_projects.py
         env:
-          EXCLUDE_REPOS: ${{ env.EXCLUDE_REPOS }}
+          EXCLUDE_REPOS: ${{ vars.EXCLUDE_REPOS }}
       - name: Commit and push if changed
         run: |
           git config --global user.name 'github-actions[bot]'
