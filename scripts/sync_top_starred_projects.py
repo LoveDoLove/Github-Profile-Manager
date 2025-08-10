@@ -28,9 +28,20 @@ def detect_github_username():
 GITHUB_USERNAME = detect_github_username()
 # EXCLUDE_REPOS is set only via the EXCLUDE_REPOS environment variable (comma-separated).
 # If the environment variable is not set, EXCLUDE_REPOS will be an empty list.
-EXCLUDE_REPOS = [
-    repo.strip() for repo in os.environ.get("EXCLUDE_REPOS", "").split(",") if repo.strip()
-]
+# Determine EXCLUDE_REPOS source and value
+_yaml_env = os.environ.get("EXCLUDE_REPOS_YAML")
+_github_env = os.environ.get("EXCLUDE_REPOS_GITHUB") or os.environ.get("EXCLUDE_REPOS")
+
+if _yaml_env:
+    EXCLUDE_REPOS = [repo.strip() for repo in _yaml_env.split(",") if repo.strip()]
+    print("[INFO] EXCLUDE_REPOS source: workflow YAML env (EXCLUDE_REPOS_YAML or EXCLUDE_REPOS)")
+elif _github_env:
+    EXCLUDE_REPOS = [repo.strip() for repo in _github_env.split(",") if repo.strip()]
+    print("[INFO] EXCLUDE_REPOS source: GitHub environment variable (EXCLUDE_REPOS)")
+else:
+    EXCLUDE_REPOS = []
+    print("[INFO] EXCLUDE_REPOS not set in workflow YAML env or GitHub env; using empty list.")
+
 print(f"[INFO] EXCLUDE_REPOS: {EXCLUDE_REPOS}")
 README_PATH = "README.md"
 FEATURED_START = "## 🚀 Featured Projects"
