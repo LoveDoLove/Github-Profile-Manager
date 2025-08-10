@@ -9,10 +9,19 @@ import requests
 def detect_github_username():
     repo = os.environ.get("GITHUB_REPOSITORY")
     if repo and "/" in repo:
-        return repo.split("/")[0]
+        username = repo.split("/")[0]
+        print(f"[INFO] Detected GitHub username from GITHUB_REPOSITORY: {username}")
+        return username
     username = os.environ.get("GITHUB_ACTOR") or os.environ.get("GITHUB_USERNAME")
     if username:
+        # Mask if it looks like a token or is from env
+        if "token" in username.lower() or len(username) > 32:
+            masked = username[:2] + "*" * (len(username) - 4) + username[-2:]
+            print(f"[INFO] Detected GitHub username from environment variable: {masked} (masked)")
+        else:
+            print(f"[INFO] Detected GitHub username from environment variable: {username}")
         return username
+    print("[ERROR] GITHUB_USERNAME could not be determined. Please set GITHUB_REPOSITORY, GITHUB_ACTOR, or GITHUB_USERNAME environment variable.")
     raise RuntimeError(
         "GITHUB_USERNAME could not be determined. Please set GITHUB_REPOSITORY, GITHUB_ACTOR, or GITHUB_USERNAME environment variable."
     )
@@ -22,12 +31,14 @@ GITHUB_USERNAME = detect_github_username()
 EXCLUDE_REPOS = [
     repo.strip() for repo in os.environ.get("EXCLUDE_REPOS", "").split(",") if repo.strip()
 ]
+print(f"[INFO] EXCLUDE_REPOS: {EXCLUDE_REPOS}")
 README_PATH = "README.md"
 FEATURED_START = "## 🚀 Featured Projects"
 FEATURED_END = "---"
 MAX_PROJECTS = 10
 
 def fetch_repos():
+    print("[STEP] Fetching repositories from GitHub API...")
     url = f"https://api.github.com/users/{GITHUB_USERNAME}/repos?per_page=100&type=public&sort=updated"
     repos = []
     while url:
@@ -36,7 +47,10 @@ def fetch_repos():
         repos.extend(resp.json())
         # Pagination
         url = resp.links.get('next', {}).get('url')
-    return [repo for repo in repos if not repo['fork'] and repo['name'] not in EXCLUDE_REPOS]
+    filtered = [repo for repo in repos if not repo['fork'] and repo['name'] not in EXCLUDE_REPOS]
+    print(f"[INFO] Total repos fetched: {len(repos)}")
+    print(f"[INFO] Total repos after filtering (not forked, not excluded): {len(filtered)}")
+    return filtered
 
 def get_repo_languages(repo_name):
     url = f"https://api.github.com/repos/{GITHUB_USERNAME}/{repo_name}/languages"
@@ -47,7 +61,10 @@ def get_repo_languages(repo_name):
     return []
 
 def get_featured_md(repos):
+    print("[STEP] Selecting featured repositories...")
     sorted_repos = sorted(repos, key=lambda r: r['stargazers_count'], reverse=True)[:MAX_PROJECTS]
+    featured_names = [repo['name'] for repo in sorted_repos]
+    print(f"[INFO] Featured repositories: {featured_names}")
     lines = []
     for repo in sorted_repos:
         name = repo['name']
@@ -61,22 +78,25 @@ def get_featured_md(repos):
     return '\n'.join(lines)
 
 def update_readme():
+    print("[STEP] Updating README.md with featured projects...")
     with open(README_PATH, encoding="utf-8") as f:
         content = f.read()
     start = content.find(FEATURED_START)
     if start == -1:
-        print("Could not find start marker in README.md")
+        print("[ERROR] Could not find start marker in README.md")
         return
     end = content.find(FEATURED_END, start)
     if end == -1:
-        print("Could not find end marker after featured section in README.md")
+        print("[ERROR] Could not find end marker after featured section in README.md")
         return
     repos = fetch_repos()
     featured_md = get_featured_md(repos)
     new_content = content[:start] + FEATURED_START + "\n\n" + featured_md + "\n" + content[end:]
     with open(README_PATH, "w", encoding="utf-8") as f:
         f.write(new_content)
-    print("README.md updated with top starred public repos.")
+    print("[SUCCESS] README.md updated with top starred public repos.")
 
 if __name__ == "__main__":
+    print("[STEP] sync_top_starred_projects.py started.")
     update_readme()
+    print("[STEP] sync_top_starred_projects.py completed.")
