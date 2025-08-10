@@ -17,7 +17,7 @@
 <h3 align="center">GitHub Profile Manager</h3>
 
   <p align="center">
-    Automate your GitHub profile README with dynamic featured projects and a 3D contribution graph using GitHub Actions workflows.
+    Automate your GitHub profile README with dynamic featured projects and 3D contribution graphs using GitHub Actions workflows.
     <br />
     <a href="https://github.com/LoveDoLove/Github-Profile-Manager"><strong>Explore the docs »</strong></a>
     <br />
@@ -42,6 +42,7 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
@@ -55,7 +56,7 @@
 
 ## About The Project
 
-**GitHub Profile Manager** automates your GitHub profile README by dynamically updating featured repositories (top-starred), displaying a 3D contribution graph, and providing ready-to-use GitHub Actions workflow templates. No manual script execution is required—just set up the workflows and let automation keep your profile engaging and up-to-date.
+**GitHub Profile Manager** automates your GitHub profile README by dynamically updating featured repositories based on stars and displaying a 3D contribution graph. All updates are handled via GitHub Actions workflows—no manual script running required.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -69,38 +70,32 @@
 
 ## Getting Started
 
+### Prerequisites
+
+- A GitHub repository with a profile README (e.g., `<username>/<username>`)
+- GitHub Actions enabled
+
 ### Installation
 
-1. Copy the workflow YAML files from the `workflows/` directory into your repository’s `.github/workflows` directory:
-
-   - [`workflows/generate-3d-contribution-graph.yml`](workflows/generate-3d-contribution-graph.yml)
-   - [`workflows/sync-top-starred-projects.yml`](workflows/sync-top-starred-projects.yml)
-
-2. No manual script execution is needed. The workflows will run automatically on the configured schedule or trigger.
+1. Copy the workflow YAML files from the `workflows/` directory into your repository's `.github/workflows` directory:
+   - [`generate-3d-contribution-graph.yml`](workflows/generate-3d-contribution-graph.yml)
+   - [`sync-top-starred-projects.yml`](workflows/sync-top-starred-projects.yml)
+2. (Optional) Add a repository environment variable named `EXCLUDE_REPOS` in your GitHub repository settings to exclude specific repositories from the featured list. Use a comma-separated list (e.g., `repo1,repo2`).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Usage
 
 - **Automatic Featured Projects:**  
-  The `sync-top-starred-projects.yml` workflow automatically updates your profile README with your top-starred public repositories.  
-  To exclude specific repositories, set the `EXCLUDE_REPOS` environment variable in your workflow YAML:
-  ```yaml
-  env:
-    EXCLUDE_REPOS: repo1,repo2,repo3
-  ```
+  The `sync-top-starred-projects.yml` workflow will automatically update your profile README with your top-starred repositories on a schedule or on demand.
+- **Exclude Repositories:**  
+  To skip certain repositories, set the `EXCLUDE_REPOS` repository environment variable in your GitHub settings.
 - **3D Contribution Graph:**  
-  The `generate-3d-contribution-graph.yml` workflow generates a 3D SVG contribution graph.  
-  Embed it in your README with:
+  The `generate-3d-contribution-graph.yml` workflow generates a 3D contribution graph SVG, which you can embed in your profile README.
+- **No Manual Script Running:**  
+  All updates are handled by GitHub Actions; you do not need to run scripts locally.
 
-  ```markdown
-  ![3D GitHub Profile](https://raw.githubusercontent.com/<your-username>/<your-username>/main/profile-3d-contrib/profile-green-animate.svg)
-  ```
-
-  Replace `<your-username>` with your GitHub username.
-
-- **No Manual Scripts:**  
-  All updates are handled by GitHub Actions. No need to run scripts like `scripts/sync_top_starred_projects.py` manually.
+_For more examples, refer to the [Documentation](https://github.com/LoveDoLove/Github-Profile-Manager)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -127,7 +122,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
